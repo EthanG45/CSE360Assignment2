@@ -3,7 +3,9 @@
  * <b> ClassID: </b> 144 <br>
  * <b> File: </b> SimpleList.java <br>
  * <b> GitHub Repo Link: </b> https://github.com/EthanG45/CSE360Assignment2 <br>
- * <b> Assignment 2: </b> Update description!<br> 
+ * <b> Assignment 2: </b> The primary focus of this assignment is to use GitHub for
+ * committing to a repository containing this Assignment 2 package. This assignment modifies
+ * assigment 1 by changing the add method, remove method, and adding four other new methods.<br> 
  */
 package cse360assign2;
 
@@ -12,16 +14,18 @@ package cse360assign2;
  * <b> Class: SimpleList </b> <br>
  * The SimpleList class contains a private int array and a private int. The array 
  * stores the list and the count stores the current number of elements in the list.
- * It has 6 methods including the base constructor. These include SimpleList(), add(int),
- * remove(int), int count(), String toString(), and int search(). 
+ * It has 10 methods including the base constructor. These include SimpleList(), add(int),
+ * remove(int), int count(), String toString(), int search(), append(int), int first(),
+ * int last(), and int size(). Note the add method and remove method have been changed see their respective JavaDoc comments.
  * @author Ethan Gilchrist
- * @since 2020-02-10 
+ * @since 2020-02-27
  */
 public class SimpleList
 {
 	/**
 	 * <b> Private variable: int[] list </b> <br>
-	 * This int array will store up to 10 int values throughout the program. 
+	 * This int array will store up at first 10 int values.
+	 * As a user adds value it can expand in size by increments of 50%.
 	 */
 	private int[] list;
 	/**
@@ -44,8 +48,9 @@ public class SimpleList
 	/**
 	 * <b> Method: add() </b> <br>
 	 * The add method will add values to index 0 of the array. It moves all other
-	 * integers in array over. If list is full, last element is removed from list.
-	 * Increments the count every-time a value is added.
+	 * integers in array over. If list is full, the list is increased in size by 50%.
+	 * This means for example a list of size 10 would increase to a size of 15.
+	 * Increments the count every time a value is added.
 	 * @param input an integer value to add to the array
 	 */
 	public void add(int input)
@@ -64,11 +69,12 @@ public class SimpleList
 		}
 		else //when the count reaches max value we increase array size by 50%
 		{ 
-			int newSize = this.list.length + (int)(this.list.length * .5); 
-			int[] biggerList = new int[newSize];
-			System.arraycopy(this.list, 0, biggerList, 0, this.list.length);
-			this.list = biggerList;
-			for(int loopCounter = count-1; loopCounter >= 0; loopCounter--)
+			int newSize = this.list.length + (int)(this.list.length * .5); //calculate new array size with int arithmetic
+			int[] biggerList = new int[newSize]; //create new array with the 50% size increase
+			System.arraycopy(this.list, 0, biggerList, 0, this.list.length); //use arraycopy to move previous values into new array
+			this.list = biggerList; //remove our smaller list by pointing this.list to the new list
+			
+			for(int loopCounter = this.count-1; loopCounter >= 0; loopCounter--) //push values forward by traversing array backwards
 			{
 				this.list[loopCounter+1] = this.list[loopCounter];
 			}
@@ -82,6 +88,9 @@ public class SimpleList
 	 * The remove method will check if the parameter is in the list and remove it.
 	 * If the value is repeated, it only removes the first instance. The other
 	 * values in the list are shifted down. Count is also lowered.
+	 * If the list has more than 25% empty spots, the size of the list is decremented by 25%.
+	 * For example if a list of 10 has only 7 filled spots it will be decremented to a size of 8.
+	 * Note the list can't be reduced to less than 1 entry.
 	 * @param input an integer value to remove from the array
 	 */
 	public void remove(int input)
@@ -99,15 +108,15 @@ public class SimpleList
 						this.list[secondLoopCounter++] = this.list[loopCounter];
 					}
 				}
-				count--;
+				this.count--;
 			}
-			double sizeChecker = (double) this.count / (double) this.list.length;
-			if(this.list.length != 1 && sizeChecker <= .75) 
+			double sizeChecker = (double) this.count / (double) this.list.length; //use double arithmetic to get the percentage of array filled
+			if(!(this.count <= 1) && sizeChecker <= .75)  //check if array isn't one entry and if the array size is 25% empty
 			{
-				int newSize = this.list.length - (int)(this.list.length * .25);
-				int[] smallerList = new int[newSize];
-				System.arraycopy(this.list, 0, smallerList, 0, newSize-1);
-				this.list = smallerList;
+				int newSize = this.list.length - (int)(this.list.length * .25); //calculate new array size with int arithmetic
+				int[] smallerList = new int[newSize]; //create new array with the 25% size decrease
+				System.arraycopy(this.list, 0, smallerList, 0, newSize-1); //use arraycopy to move previous values into new array
+				this.list = smallerList; //remove the larger list by pointing this.list to the new list
 			}
 		}
 	}
@@ -168,9 +177,18 @@ public class SimpleList
 		return searchIndex;
 	}
 	
+	/**
+	 * <b> Method: append() </b> <br>
+	 * The add method will append values to the last index of the array.
+	 * Note this is the "count" index or the end of the list.
+	 * If list is full, the list is increased in size by 50%.
+	 * This means for example a list of size 10 would increase to a size of 15.
+	 * Increments the count every time a value is added.
+	 * @param input an integer value to append to the array
+	 */
 	public void append(int input) 
 	{
-		if(this.count == 0)
+		if(this.count == 0) //if list is empty we still insert at head
 		{
 			this.list[0] = input;
 		}
@@ -180,15 +198,23 @@ public class SimpleList
 		}
 		else //when the count reaches value we increase array size by 50%
 		{ 
-			int newSize = this.list.length + (int)(this.list.length * .5); 
-			int[] biggerList = new int[newSize];
-			System.arraycopy(this.list, 0, biggerList, 0, this.list.length);
-			this.list = biggerList;
+			int newSize = this.list.length + (int)(this.list.length * .5); //calculate new array size with int arithmetic
+			int[] biggerList = new int[newSize]; //create new array with the 50% size increase
+			System.arraycopy(this.list, 0, biggerList, 0, this.list.length); //use arraycopy to move previous values into new array
+			this.list = biggerList; //remove our smaller list by pointing this.list to the new list
+			
 			this.list[count] = input;
 		}
 		this.count++;
 	}
 	
+	/**
+	 * <b> Method: first() </b> <br>
+	 * This getter method returns the first value of the class object array list.
+	 * The first value is just the value at index 0. We either return this value or
+	 * if the list is empty (count = 0) return -1.
+	 * @return the first element of the array
+	 */
 	public int first()
 	{
 		if(this.count != 0)
@@ -201,6 +227,13 @@ public class SimpleList
 		}
 	}
 	
+	/**
+	 * <b> Method: last() </b> <br>
+	 * This getter method returns the last value of the class object array list.
+	 * The last value is just the value at index count-1. We either return this value or
+	 * if the list is empty (count = 0) return -1.
+	 * @return the last element of the array
+	 */
 	public int last()
 	{
 		if(this.count != 0)
@@ -213,58 +246,14 @@ public class SimpleList
 		}
 	}
 	
+	/**
+	 * <b> Method: size() </b> <br>
+	 * This getter method returns the size of the class object array list.
+	 * The size is always this.list.length. This tells the user how many spaces are open for input.
+	 * @return the length of the array
+	 */
 	public int size()
 	{
 		return this.list.length;
 	}
-	
-	public static void main(String[] args)
-	{
-		SimpleList testObject = new SimpleList();
-		System.out.println("im first");
-		System.out.println(testObject.first());
-		System.out.println("im last");
-		System.out.println(testObject.last());
-		System.out.println("im size");
-		System.out.println(testObject.size());
-		testObject.add(2);
-		testObject.add(4);
-		testObject.add(6);
-		testObject.add(8);
-		testObject.add(10);
-		testObject.add(12);
-		testObject.add(14);
-		testObject.add(16);
-		testObject.add(18);
-		testObject.add(20);
-		testObject.remove(2);
-		testObject.remove(4);
-		testObject.remove(6);
-		System.out.println("im size");
-		System.out.println(testObject.size());
-		testObject.add(22);
-		testObject.add(24);
-		System.out.println("im size");
-		System.out.println(testObject.size());
-		testObject.add(26);
-		testObject.add(28);
-		testObject.append(1);
-		testObject.append(102);
-		testObject.append(104);
-		System.out.println("im size");
-		System.out.println(testObject.size());
-		
-		
-		for(int i = 0; i<testObject.count(); i++)
-		{
-			System.out.println(testObject.list[i]);
-		}
-		System.out.println(testObject.toString());
-		System.out.println("im first");
-		System.out.println(testObject.first());
-		System.out.println("im last");
-		System.out.println(testObject.last());
-		
-	}
-
 }
