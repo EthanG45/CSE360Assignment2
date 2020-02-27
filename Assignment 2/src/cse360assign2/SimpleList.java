@@ -62,7 +62,7 @@ public class SimpleList
 			}
 			this.list[0] = input;
 		}
-		else //when the count reaches 10 we increase array size by 50%
+		else //when the count reaches max value we increase array size by 50%
 		{ 
 			int newSize = this.list.length + (int)(this.list.length * .5); 
 			int[] biggerList = new int[newSize];
@@ -168,9 +168,65 @@ public class SimpleList
 		return searchIndex;
 	}
 	
+	public void append(int input) 
+	{
+		if(this.count == 0)
+		{
+			this.list[0] = input;
+		}
+		else if (this.count < this.list.length)
+		{
+			this.list[count] = input;
+		}
+		else //when the count reaches value we increase array size by 50%
+		{ 
+			int newSize = this.list.length + (int)(this.list.length * .5); 
+			int[] biggerList = new int[newSize];
+			System.arraycopy(this.list, 0, biggerList, 0, this.list.length);
+			this.list = biggerList;
+			this.list[count] = input;
+		}
+		this.count++;
+	}
+	
+	public int first()
+	{
+		if(this.count != 0)
+		{
+			return this.list[0];
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	
+	public int last()
+	{
+		if(this.count != 0)
+		{
+			return this.list[count-1];
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	
+	public int size()
+	{
+		return this.list.length;
+	}
+	
 	public static void main(String[] args)
 	{
 		SimpleList testObject = new SimpleList();
+		System.out.println("im first");
+		System.out.println(testObject.first());
+		System.out.println("im last");
+		System.out.println(testObject.last());
+		System.out.println("im size");
+		System.out.println(testObject.size());
 		testObject.add(2);
 		testObject.add(4);
 		testObject.add(6);
@@ -184,14 +240,30 @@ public class SimpleList
 		testObject.remove(2);
 		testObject.remove(4);
 		testObject.remove(6);
-//		testObject.add(22);
-//		testObject.add(24);
+		System.out.println("im size");
+		System.out.println(testObject.size());
+		testObject.add(22);
+		testObject.add(24);
+		System.out.println("im size");
+		System.out.println(testObject.size());
+		testObject.add(26);
+		testObject.add(28);
+		testObject.append(1);
+		testObject.append(102);
+		testObject.append(104);
+		System.out.println("im size");
+		System.out.println(testObject.size());
+		
 		
 		for(int i = 0; i<testObject.count(); i++)
 		{
 			System.out.println(testObject.list[i]);
 		}
 		System.out.println(testObject.toString());
+		System.out.println("im first");
+		System.out.println(testObject.first());
+		System.out.println("im last");
+		System.out.println(testObject.last());
 		
 	}
 
