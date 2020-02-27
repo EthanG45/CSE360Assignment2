@@ -2,11 +2,8 @@
  * @author Ethan Gilchrist <br>
  * <b> ClassID: </b> 144 <br>
  * <b> File: </b> SimpleList.java <br>
- * <b> Assignment 1: </b> This program contains a simple list class where the
- * objects will contain a list of with 10 integers and a count. The simpleList class 
- * contains methods for adding an int to the list, removing an int, getting the count,
- * getting the list as a string separated by spaces, and a search method
- * for getting index of an element. Note the package is called assign1.<br> 
+ * <b> GitHub Repo Link: </b> https://github.com/EthanG45/CSE360Assignment2 <br>
+ * <b> Assignment 2: </b> Update description!<br> 
  */
 package cse360assign2;
 
@@ -55,26 +52,29 @@ public class SimpleList
 	{
 		if(this.count == 0)
 		{
-			list[0] = input;
+			this.list[0] = input;
 		}
 		else if (this.count < this.list.length)
 		{
 			for(int loopCounter = count-1; loopCounter >= 0; loopCounter--) //push values forward by traversing array backwards
 			{
-				list[loopCounter+1] = list[loopCounter];
+				this.list[loopCounter+1] = this.list[loopCounter];
 			}
-			list[0] = input;
+			this.list[0] = input;
 		}
-		else //when the count reaches 10 we lower the count back to 9 and make index 9 fall out of the array
-		{
-			count = 9; 
+		else //when the count reaches 10 we increase array size by 50%
+		{ 
+			int newSize = this.list.length + (int)(this.list.length * .5); 
+			int[] biggerList = new int[newSize];
+			System.arraycopy(this.list, 0, biggerList, 0, this.list.length);
+			this.list = biggerList;
 			for(int loopCounter = count-1; loopCounter >= 0; loopCounter--)
 			{
-				list[loopCounter+1] = list[loopCounter];
+				this.list[loopCounter+1] = this.list[loopCounter];
 			}
-			list[0] = input;
+			this.list[0] = input;
 		}
-		count++;
+		this.count++;
 	}
 	
 	/**
@@ -96,10 +96,18 @@ public class SimpleList
 				{ //we implement two loopCounters. The first is compared with removal index.
 					if(loopCounter != indexToRemove) //this causes the indexToRemove value to be overwritten in array
 					{ //second loop counter is used to to shift the other values down.
-						list[secondLoopCounter++] = list[loopCounter];
+						this.list[secondLoopCounter++] = this.list[loopCounter];
 					}
 				}
 				count--;
+			}
+			double sizeChecker = (double) this.count / (double) this.list.length;
+			if(this.list.length != 1 && sizeChecker <= .75) 
+			{
+				int newSize = this.list.length - (int)(this.list.length * .25);
+				int[] smallerList = new int[newSize];
+				System.arraycopy(this.list, 0, smallerList, 0, newSize-1);
+				this.list = smallerList;
 			}
 		}
 	}
@@ -152,11 +160,39 @@ public class SimpleList
 		for(int loopCounter = 0; loopCounter < this.count; loopCounter++)
 		{
 			if(list[loopCounter] == input && valueFound == false)
-			{ //once first instance of value found, set boolean true to prevent getting index of later occurence
+			{ //once first instance of value found, set boolean true to prevent getting index of later occurrence
 				searchIndex = loopCounter;
 				valueFound = true;
 			}
 		}
 		return searchIndex;
 	}
+	
+	public static void main(String[] args)
+	{
+		SimpleList testObject = new SimpleList();
+		testObject.add(2);
+		testObject.add(4);
+		testObject.add(6);
+		testObject.add(8);
+		testObject.add(10);
+		testObject.add(12);
+		testObject.add(14);
+		testObject.add(16);
+		testObject.add(18);
+		testObject.add(20);
+		testObject.remove(2);
+		testObject.remove(4);
+		testObject.remove(6);
+//		testObject.add(22);
+//		testObject.add(24);
+		
+		for(int i = 0; i<testObject.count(); i++)
+		{
+			System.out.println(testObject.list[i]);
+		}
+		System.out.println(testObject.toString());
+		
+	}
+
 }
