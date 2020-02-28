@@ -167,8 +167,8 @@ public class SimpleListTest
 	/**
 	 * <b> Method: testAddCase2IndexOverflowSuccess() </b> <br>
 	 * The testAddCase2IndexOverflowSuccess method is case 2 for the add(int) method. 
-	 * It tests if the add succeeds in overflowing and removing the 10th value when reaching 11 inputs.
-	 * It uses the search method to see if the value has a null index of -1.
+	 * It tests if the add succeeds in overflowing when reaching 11 inputs.
+	 * It uses the search method to see if the value has an index of 10.
 	 * This is the success case expected to work.
 	 * Test method for {@link SimpleList#add(int)}.
 	 */
@@ -186,14 +186,14 @@ public class SimpleListTest
 		testObject.add(18);
 		testObject.add(20);
 		testObject.add(22);
-		assertEquals(testObject.search(2), -1);
+		assertEquals(testObject.search(2), 10);
 	}
 	
 	/**
 	 * <b> Method: testAddCase2IndexOverflowFail() </b> <br>
 	 * The testAddCase2IndexOverflowFail method is case 2 for the add(int) method. 
-	 * It tests if the add succeeds in overflowing and removing the 10th value when reaching 11 inputs.
-	 * It uses the search method to see if the value has a null index of -1.
+	 * It tests if the add succeeds in overflowing when reaching 11 inputs.
+	 * It uses the search method to see if the value has an index of 10.
 	 * This is the fail case expected to not work.
 	 * Test method for {@link SimpleList#add(int)}.
 	 */
@@ -211,7 +211,7 @@ public class SimpleListTest
 		testObject.add(18);
 		testObject.add(20);
 		testObject.add(22);
-		assertNotEquals(testObject.search(2), -1);
+		assertNotEquals(testObject.search(2), 10);
 	}
 	
 	/**
@@ -594,7 +594,7 @@ public class SimpleListTest
 		testObject.add(12);
 		testObject.add(14);
 		testObject.add(20);
-		assertEquals(testObject.count(), 10);
+		assertEquals(testObject.count(), 16);
 	}
 
 	/**
@@ -623,7 +623,7 @@ public class SimpleListTest
 		testObject.add(12);
 		testObject.add(14);
 		testObject.add(20);
-		assertNotEquals(testObject.count(), 10);
+		assertNotEquals(testObject.count(), 16);
 	}
 
 	/**
