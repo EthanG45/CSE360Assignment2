@@ -51,6 +51,7 @@ public class SimpleList
 	 * integers in array over. If list is full, the list is increased in size by 50%.
 	 * This means for example a list of size 10 would increase to a size of 15.
 	 * Increments the count every time a value is added.
+	 * There is an edge case for array of size 1 where you have to manually increase by 1.
 	 * @param input an integer value to add to the array
 	 */
 	public void add(int input)
@@ -59,9 +60,22 @@ public class SimpleList
 		{
 			this.list[0] = input;
 		}
-		else if (this.count < this.list.length)
+		else if(this.count < this.list.length)
 		{
 			for(int loopCounter = count-1; loopCounter >= 0; loopCounter--) //push values forward by traversing array backwards
+			{
+				this.list[loopCounter+1] = this.list[loopCounter];
+			}
+			this.list[0] = input;
+		}
+		else if(this.list.length == 1) //edge case where if list has reached length of 1 manually increase by 1
+		{
+			int newSize = this.list.length + 1;
+			int[] biggerList = new int[newSize]; //create new array with the size increase
+			System.arraycopy(this.list, 0, biggerList, 0, this.list.length); //use arraycopy to move previous values into new array
+			this.list = biggerList; //remove our smaller list by pointing this.list to the new list
+			
+			for(int loopCounter = this.count-1; loopCounter >= 0; loopCounter--) //push values forward by traversing array backwards
 			{
 				this.list[loopCounter+1] = this.list[loopCounter];
 			}
@@ -91,6 +105,7 @@ public class SimpleList
 	 * If the list has more than 25% empty spots, the size of the list is decremented by 25%.
 	 * For example if a list of 10 has only 7 filled spots it will be decremented to a size of 8.
 	 * Note the list can't be reduced to less than 1 entry.
+	 * Edge cases occur when list reaches size of 3 where we must manually lower the size by 1 to 2 and again from 2 to 1. 
 	 * @param input an integer value to remove from the array
 	 */
 	public void remove(int input)
@@ -110,11 +125,23 @@ public class SimpleList
 				}
 				this.count--;
 			}
-			double sizeChecker = (double) this.count / (double) this.list.length; //use double arithmetic to get the percentage of array filled
-			if(!(this.count <= 1) && sizeChecker <= .75)  //check if array isn't one entry and if the array size is 25% empty
+			
+			int twentyFivePercentOfList = this.list.length / 4; //Calculate 25% of list and compare to number of empty spaces
+			int currentEmptySpaces = this.list.length - this.count;
+			//the reason we check if twentyFivePercentOfList isn't 0 is because that case occurs when our list is length 3 where 3/4 = .75 = 0 
+			if((this.count != 1) && (currentEmptySpaces > twentyFivePercentOfList) && (twentyFivePercentOfList != 0))  //check if array isn't one entry and if the array size is 25% empty
 			{
 				int newSize = this.list.length - (int)(this.list.length * .25); //calculate new array size with int arithmetic
 				int[] smallerList = new int[newSize]; //create new array with the 25% size decrease
+				System.arraycopy(this.list, 0, smallerList, 0, newSize-1); //use arraycopy to move previous values into new array
+				this.list = smallerList; //remove the larger list by pointing this.list to the new list
+			}
+			//Note size can't decrease past 3 because .25*3 = 0 for int arithmetic. Because of this for values 2 and 3 we
+			//just hard code to decrement by 1 and reach the smallest possible array size of 1 when length = 2 and 3
+			else if(this.list.length > 1 && this.list.length <= 3)
+			{
+				int newSize = this.list.length - 1;
+				int[] smallerList = new int[newSize]; //create new array with size decrease of 1
 				System.arraycopy(this.list, 0, smallerList, 0, newSize-1); //use arraycopy to move previous values into new array
 				this.list = smallerList; //remove the larger list by pointing this.list to the new list
 			}
@@ -184,6 +211,7 @@ public class SimpleList
 	 * If list is full, the list is increased in size by 50%.
 	 * This means for example a list of size 10 would increase to a size of 15.
 	 * Increments the count every time a value is added.
+	 * There is an edge case for array of size 1 where you have to manually increase by 1.
 	 * @param input an integer value to append to the array
 	 */
 	public void append(int input) 
@@ -192,8 +220,21 @@ public class SimpleList
 		{
 			this.list[0] = input;
 		}
-		else if (this.count < this.list.length)
+		else if(this.count < this.list.length)
 		{
+			this.list[count] = input;
+		}
+		else if(this.list.length == 1) //edge case where if list has reached length of 1 manually increase by 1
+		{
+			int newSize = this.list.length + 1;
+			int[] biggerList = new int[newSize]; //create new array with the size increase
+			System.arraycopy(this.list, 0, biggerList, 0, this.list.length); //use arraycopy to move previous values into new array
+			this.list = biggerList; //remove our smaller list by pointing this.list to the new list
+			
+			for(int loopCounter = this.count-1; loopCounter >= 0; loopCounter--) //push values forward by traversing array backwards
+			{
+				this.list[loopCounter+1] = this.list[loopCounter];
+			}
 			this.list[count] = input;
 		}
 		else //when the count reaches value we increase array size by 50%
